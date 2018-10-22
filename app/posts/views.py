@@ -39,7 +39,7 @@ def post_create(request):
     # User가 로그인 된 상태가 아니면
     #  is_authenticated <- 검색
     # posts:post-list로 보내버리기
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         return redirect('posts:post-list')
 
     if request.method == 'POST':
