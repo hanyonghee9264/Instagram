@@ -92,6 +92,9 @@ def signup_view(request):
     :param request:
     :return:
     """
+    context = {
+        'form': SignupForm(),
+    }
     if request.method == 'POST':
         username = request.POST['username']
         password1 = request.POST['password1']
@@ -101,31 +104,16 @@ def signup_view(request):
         # 실제 유저에게 보여지는 form요소와 함께 오류사항을 알려줄 수 있도록 수정
         #  return render()를 사용
         if User.objects.filter(username=username).exists():
-            form = SignupForm()
-            context = {
-                'form': form,
-                'error': f'사용자명({username})은 이미 사용중입니다.',
-            }
-            return render(request, 'members/signup.html', context)
-        if password1 != password2:
-            form = SignupForm()
-            context = {
-                'form': form,
-                'error': f'사용자명({username})은 이미 사용중입니다.',
-            }
-            return render(request, 'members/signup.html', context)
-
-        # create_user메서드는 create와 달리 자동으로 password해싱을 해줌
-        user = User.objects.create_user(
-            username=username,
-            password=password1,
-        )
-        login(request, user)
-        return redirect('posts:post-list')
-    else:
-        form = SignupForm()
-        context = {
-            'form': form,
-        }
-        return render(request, 'members/signup.html', context)
+            context['error'] = f'사용자명({username})은 이미 사용중입니다.'
+        elif password1 != password2:
+            context['error'] = '비밀번호와 비밀번호 확인란의 값이 일치하지 않습니다.'
+        else:
+            # create_user메서드는 create와 달리 자동으로 password해싱을 해줌
+            user = User.objects.create_user(
+                username=username,
+                password=password1,
+            )
+            login(request, user)
+            return redirect('posts:post-list')
+    return render(request, 'members/signup.html', context)
 
