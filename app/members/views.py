@@ -1,6 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 from .forms import LoginForm, SignupForm
@@ -116,5 +115,5 @@ def signup_view(request):
         # GET요청시 빈 Form을 생성
         form = SignupForm()
 
-    context['form'] =form
+    context['form'] = form
     return render(request, 'members/signup.html', context)
