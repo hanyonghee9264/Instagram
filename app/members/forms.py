@@ -25,6 +25,7 @@ class LoginForm(forms.Form):
 
 class SignupForm(forms.Form):
     username = forms.CharField(
+        label='사용자명',
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
@@ -32,6 +33,7 @@ class SignupForm(forms.Form):
         )
     )
     password1 = forms.CharField(
+        label='비밀번호',
         widget=forms.PasswordInput(
             attrs={
                 'class': 'form-control',
@@ -39,6 +41,7 @@ class SignupForm(forms.Form):
         )
     )
     password2 = forms.CharField(
+        label='비밀번호 확인',
         widget=forms.PasswordInput(
             attrs={
                 'class': 'form-control',
@@ -59,3 +62,12 @@ class SignupForm(forms.Form):
         if password1 != password2:
             raise forms.ValidationError('비밀번호와 비밀번호 확인란의 값이 다릅니다')
         return password2
+
+    def save(self):
+        if self.errors:
+            raise ValueError('폼의 데이터 유효성 검증에 실패했습니다')
+        user = User.objects.create_user(
+            username=self.cleaned_data['username'],
+            password=self.cleaned_data['password2'],
+        )
+        return user
