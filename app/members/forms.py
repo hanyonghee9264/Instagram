@@ -53,10 +53,9 @@ class SignupForm(forms.Form):
             raise forms.ValidationError('이미 사용중인 사용자명입니다.')
         return data
 
-    def clean(self):
-        # password1, password2가 일치하는지 검사
-        super().clean()
+    def clean_password2(self):
         password1 = self.cleaned_data.get('password1')
         password2 = self.cleaned_data.get('password2')
         if password1 != password2:
-            raise forms.ValidationError('비밀번호와 비밀번호 확인란이 일치하지 않습니다.')
+            raise forms.ValidationError('비밀번호와 비밀번호 확인란의 값이 다릅니다')
+        return password2
