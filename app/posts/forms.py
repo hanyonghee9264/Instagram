@@ -42,3 +42,7 @@ class PostCreateForm(forms.Form):
             )
         # 2. post_list에서 각 Post의 댓글 목록을 출력
         return post
+
+
+class CommentCreateForm(forms.Form):
+    pass
