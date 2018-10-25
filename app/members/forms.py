@@ -77,6 +77,7 @@ class SignupForm(forms.Form):
         # username이 유일한지 검사
         data = self.cleaned_data['username']
         if User.objects.filter(username=data).exists():
+            self.fields['username'].widget.attrs['class'] += 'is-invalid'
             raise forms.ValidationError('이미 사용중인 사용자명입니다.')
         return data
 
@@ -84,6 +85,8 @@ class SignupForm(forms.Form):
         password1 = self.cleaned_data.get('password1')
         password2 = self.cleaned_data.get('password2')
         if password1 != password2:
+            self.fields['password1'].widget.attrs['class'] += ' is-invalid'
+            self.fields['password2'].widget.attrs['class'] += ' is-invalid'
             raise forms.ValidationError('비밀번호와 비밀번호 확인란의 값이 다릅니다')
         return password2
 
