@@ -1,8 +1,10 @@
+import re
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from .forms import PostCreateForm, CommentCreateForm, CommentForm, PostForm
-from .models import Post
+from .models import Post, HashTag
 
 
 def post_list(request):
