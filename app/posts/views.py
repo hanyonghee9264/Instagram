@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from .forms import PostCreateForm, CommentCreateForm, CommentForm
+from .forms import PostCreateForm, CommentCreateForm, CommentForm, PostForm
 from .models import Post
 
 
@@ -31,7 +31,7 @@ def post_list(request):
     # 적절히 CommentCreateForm을 전달
     context = {
         'posts': posts,
-        'comment_form': CommentCreateForm(),
+        'comment_form': CommentForm(),
     }
     return render(request, 'posts/post_list.html', context)
 
@@ -49,15 +49,25 @@ def post_create(request):
         # author는 User.objects.first()
         # photo는 request.FILES에 있는 내용을 적절히 꺼내서 쓴다
         # 완료된 후 posts:post-list로 redirect
-        form = PostCreateForm(request.POST, request.FILES)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save(author=request.user)
-            # author=request.user
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+
+            # PostForm에 'comment'값이 전달되었다면
+            # 위에서 만든 Post와 연결되는 Comment를 생성
+            comment_content = form.cleaned_data['comment']
+            if comment_content:
+                post.comments.create(
+                    author=request.user,
+                    content=form.cleaned_data['comment'],
+                )
             return redirect('posts:post-list')
     else:
         # GET요청의 경우, 빈 Form인스턴스를 context에 담아서 전달
         # Template에서는 'form'키로 해당 Form인스턴스 속성을 사용 가능
-        form = PostCreateForm()
+        form = PostForm()
 
     context['form'] = form
     return render(request, 'posts/post_create.html', context)
