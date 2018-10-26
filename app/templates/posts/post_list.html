@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% block content %}
 <div>
     {% for post in posts %}
@@ -9,7 +8,12 @@
         <div class="card">
             <!--작성자 정보를 나타냄 header부분-->
             <div class="card-header">
-                {{ post.author }}
+                <span>
+                    <a href="#">
+                        <img src="{{ post.author.img_profile_url }}" style="width: 30px; height: 30px; border-radius: 100%;">
+                    </a>
+                </span>
+                <span>{{ post.author }}</span>
             </div>
             <!--Card의 본문 부분-->
             <div class="card-body">

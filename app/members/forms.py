@@ -110,6 +110,7 @@ class SignupForm(forms.Form):
 
 
 class UserProfileForm(forms.ModelForm):
+
     class Meta:
         model = User
         fields = [
