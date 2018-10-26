@@ -3,8 +3,8 @@ import re
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from .forms import PostCreateForm, CommentCreateForm, CommentForm, PostForm
-from .models import Post, HashTag
+from .forms import CommentForm, PostForm
+from .models import Post
 
 
 def post_list(request):
@@ -111,8 +111,16 @@ def tag_post_list(request, tag_name):
     #  Post목록을 posts변수에 할당
     #  context에 담아서 리턴 render
     # HTML: /posts/tag_post_list.html
-    posts = Post.objects.filter(comments__tags__name=tag_name)
+    posts = Post.objects.filter(comments__tags__name=tag_name).distinct()
     context = {
         'posts': posts,
     }
     return render(request, 'posts/tag_post_list.html', context)
+
+
+def tag_search(request):
+    # keyword값을 적절히 활용해서
+    # 위의 tag_post_list view로 redirect
+    search_keyword = request.GET.get('search_keyword')
+    substitued_keyword = re.sub(r'#|\s+', '', search_keyword)
+    return redirect('tag-post-list', substitued_keyword)

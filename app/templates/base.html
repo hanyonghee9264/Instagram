@@ -34,8 +34,8 @@
         <!--좌측 제목부분-->
         <a href="{% url 'posts:post-list' %}" class="navbar-brand">Instagram</a>
         <!--검색 form-->
-        <form action="#" class="form-inline ml-md-auto">
-            <input type="text" class="form-control" placeholder="검색">
+        <form action="{% url 'posts:tag-search' %}" class="form-inline ml-md-auto">
+            <input type="text" name="search_keyword" class="form-control" placeholder="검색">
         </form>
         <!--우측 3개 메뉴 버튼-->
         <ul class="navbar-nav ml-md-auto">
@@ -43,7 +43,7 @@
                 <a href="{% url 'posts:post-create' %}" class="btn btn-outline-secondary">+ Add Post</a>
             </li>
             <li class="nav-item mr-sm-1">
-                <a href="{% url 'posts:post-create' %}" class="btn btn-outline-secondary">Explore</a>
+                <a href="#" class="btn btn-outline-secondary">Explore</a>
             </li>
             <li class="nav-item mr-sm-1">
                 <a href="#" class="btn btn-outline-secondary">Favorites</a>
