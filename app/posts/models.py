@@ -29,6 +29,13 @@ class Post(models.Model):
         verbose_name_plural = '포스트 목록'
         ordering = ['-pk']
 
+    def like_toggle(self, user):
+        # 전달받은 user가 이 Post를 like한다면 해제
+        # 안되어있다면 Like처리
+        postlike, postlike_created = self.postlike_set.get_or_create(user=user)
+        if not postlike_created:
+            postlike.delete()
+
 
 class Comment(models.Model):
     TAG_PATTERN = re.compile(r'#(?P<tag>\w+)')
@@ -136,10 +143,3 @@ class PostLike(models.Model):
         unique_together = (
             ('post', 'user'),
         )
-
-    def like_toggle(self, user):
-        # 전달받은 user가 이 Post를 like한다면 해제
-        # 안되어있다면 Like처리
-        postlike, postlike_created = self.postlike_set.get_or_create(user=user)
-        if not postlike_created:
-            postlike.delete()
