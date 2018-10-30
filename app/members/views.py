@@ -2,6 +2,7 @@ import imghdr
 from pprint import pprint
 
 import requests
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
@@ -176,9 +177,9 @@ def facebook_login(request):
     #   이후 돌아온 response를
     #   HttpResponse로 보여주기
     params = {
-        'client_id': 260589871313348,
+        'client_id': settings.FACEBOOK_APP_ID,
         'redirect_uri': 'http://localhost:8000/members/facebook-login/',
-        'client_secret': 'bb11faa9741e58a882042ce895f3a091',
+        'client_secret': settings.FACEBOOK_APP_SECRET,
         'code': code,
     }
     response = requests.get(api_get_access_token, params)
