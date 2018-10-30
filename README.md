@@ -18,7 +18,7 @@ pip install -r requirements.txt
 ```json
 {
   "SECRET_KEY": "<Djnago SECRET_KEY>",
-  "FACEBOOK_APP_ID": <Facebook APP ID>,
+  "FACEBOOK_APP_ID": "<Facebook APP ID>",
   "FACEBOOK_APP_SECRET": "<Facebook APP Secret>"
 }
 ```
