@@ -1,8 +1,6 @@
 from rest_framework import serializers
 
-from members.models import User
-
-from .models import Post, Comment, PostLike
+from .models import Post, PostLike
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -21,31 +19,17 @@ class PostSerializer(serializers.ModelSerializer):
         )
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = (
-            'img_profile',
-            'site',
-            'introduce',
-        )
-
-
-class CommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        fields = (
-            'post',
-            'author',
-            'content',
-        )
-
-
 class PostLikeSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(
+        default=serializers.CurrentUserDefault(),
+    )
+
     class Meta:
         model = PostLike
         fields = (
             'post',
             'user',
-            'created_at'
+        )
+        read_only_fields = (
+            'user',
         )
