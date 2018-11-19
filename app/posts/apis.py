@@ -6,6 +6,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from posts.permissions import IsUser
 from posts.serializers import PostSerializer, PostLikeSerializer
 from .models import HashTag, Post, PostLike
 
@@ -87,11 +88,18 @@ class PostLikeCreateDestroy(APIView):
 
 
 class PostLikeCreateAPIView(generics.CreateAPIView):
-    pass
+    queryset = PostLike.objects.all()
+    serializer_class = PostLikeSerializer
+    permission_classes = (permissions.IsAuthenticated,)
 
 
 class PostLikeDestroyAPIView(generics.DestroyAPIView):
-    pass
+    queryset = Post.objects.all()
+    serializer_class = PostLikeSerializer
+    permission_classes = (
+        permissions.IsAuthenticated,
+        IsUser,
+    )
 
 
 def tag_search(request):
