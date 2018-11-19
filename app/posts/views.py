@@ -120,8 +120,12 @@ def tag_post_list(request, tag_name):
 
 
 def tag_search(request):
-    # keyword값을 적절히 활용해서
-    # 위의 tag_post_list view로 redirect
+    # request.GET으로 전달된
+    #  search_keyword값을 적절히 활용해서
+    #  위의 tag_post_list view로 redirect
+    # URL: '/posts/tag-search/'
+    # URL Name: 'posts:tag-search'
+    # Template: 없음
     search_keyword = request.GET.get('search_keyword')
     substitued_keyword = re.sub(r'#|\s+', '', search_keyword)
     return redirect('tag-post-list', substitued_keyword)

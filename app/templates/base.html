@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
     <title>Instagram</title>
     <style>
 		.square {
@@ -31,7 +33,33 @@
 		    left: 10px;
 		    width 300px;
 		}
+        #search-form {
+            position: relative;
+            overflow: visible;
+        }
+        ul.search-list {
+            position: absolute;
+            width: 100%;
+            height: 300px;
+            top: 100%;
+            left: 0;
+            background-color: white;
+            border: 1px solid #999;
+            border-radius: 5px;
+            z-index: 999;
 
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        ul.search-list > li {
+            display: block;
+            border-bottom: 1px solid #999;
+            padding: 8px;
+        }
+        ul.search-list > li > a {
+            color: #666;
+        }
     </style>
 </head>
 <body>
@@ -41,8 +69,19 @@
         <!--좌측 제목부분-->
         <a href="{% url 'posts:post-list' %}" class="navbar-brand">Instagram</a>
         <!--검색 form-->
-        <form action="{% url 'posts:tag-search' %}" class="form-inline ml-md-auto">
-            <input type="text" name="search_keyword" class="form-control" placeholder="검색">
+        <form id="search-form" action="{% url 'posts:tag-search' %}" class="form-inline ml-md-auto">
+            <input id="search-input" type="text" name="search_keyword" class="form-control" autocomplete="false" placeholder="검색">
+            <ul class="search-list">
+                <li>
+                    <a href="#">Tag</a>
+                </li>
+                <li>
+                    <a href="#">Tag</a>
+                </li>
+                <li>
+                    <a href="#">Tag</a>
+                </li>
+            </ul>
         </form>
         <!--우측 3개 메뉴 버튼-->
         <ul class="navbar-nav ml-md-auto">
@@ -96,6 +135,13 @@
         {% endfor %}
     </div>
     {% endif %}
+    <script>
+        $('#search-input').keydown(function (e) {
+            var content = $('#search-input').val();
+            console.log(content);
+
+        });
+    </script>
 </div>
 </body>
 </html>
