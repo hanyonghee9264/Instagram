@@ -22,6 +22,8 @@ from posts import apis
 
 from posts.views import tag_post_list
 from . import views
+from posts import apis as posts_apis
+from members import apis as members_apis
 
 urlpatterns_api_posts = ([
     path('post/', apis.PostList.as_view(), name='post-list'),
@@ -32,8 +34,18 @@ urlpatterns_api_posts = ([
     path('postlike/<int:pk>/', apis.PostLikeDestroyAPIView.as_view()),
 ], 'posts')
 
+urlpatterns_api_members = ([
+    path('auth-token/', members_apis.AuthTokenView.as_view()),
+    path('user/profile/', members_apis.UserDetail.as_view()),
+    path('user/<int:pk>/', members_apis.UserDetail.as_view()),
+
+    path('user/view/<int:pk>/', members_apis.UserDetailAPIView.as_view()),
+    path('user/view/profile/', members_apis.UserDetailAPIView.as_view()),
+], 'members')
+
 urlpatterns_api = ([
     path('posts/', include(urlpatterns_api_posts)),
+    path('members/', include(urlpatterns_api_members)),
 ], 'api')
 
 urlpatterns = [
