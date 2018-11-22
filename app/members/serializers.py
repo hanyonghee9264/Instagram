@@ -27,7 +27,7 @@ class AuthTokenSerializer(serializers.Serializer):
         username = data['username']
         password = data['password']
         user = authenticate(username=username, password=password)
-        if not user:
+        if user is None:
             raise AuthenticationFailed('아이디 또는 비밀번호가 올바르지 않습니다')
         self.user = user
         return data

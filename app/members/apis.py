@@ -1,22 +1,22 @@
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import get_user_model
 from rest_framework import generics, status
-from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.serializers import AuthTokenSerializer
-from rest_framework.exceptions import AuthenticationFailed, NotAuthenticated
+from rest_framework.exceptions import NotAuthenticated
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import UserSerializer
 from .models import User
+from .serializers import UserSerializer, AuthTokenSerializer
 
 User = get_user_model()
+
 
 class AuthTokenView(APIView):
     """
     username, password를 받아서
     사용자 인증에 성공하면 해당 사용자와 연결된 토큰 정보와 사용자 정보를 동시에 리턴
     """
+
     def post(self, request):
         # URL: /members/auth-token/
         # 사용자 인증정보가 와야지만 사용 가능
@@ -46,6 +46,7 @@ class UserDetailAPIView(APIView):
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
+
 class UserDetail(generics.RetrieveAPIView):
     # URL1: apis/members/<int:pk>/
     # URL2: apis/members/profile/
@@ -60,6 +61,7 @@ class UserDetail(generics.RetrieveAPIView):
     # 돌려주는 데이터는 유저정보 serialize결과
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
 
     def get_object(self):
         # 하나의 Object를 특정화 하기 위한 조건을 가진 필드명 또는 URL패턴명

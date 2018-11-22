@@ -1,67 +1,36 @@
 import json
 
 from django.http import HttpResponse
-from rest_framework import status, permissions, generics
+from rest_framework import permissions, generics, status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from posts.permissions import IsUser
-from posts.serializers import PostSerializer, PostLikeSerializer
 from .models import HashTag, Post, PostLike
+from .serializers import PostSerializer, PostLikeSerializer
+from .permissions import IsUser
 
 
-class PostList(APIView):
+# generics.ListCreateAPIView
+class PostList(generics.ListCreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
     permission_classes = (
         permissions.IsAuthenticatedOrReadOnly,
     )
 
-    # drf설치, settings에 적절히 설정 후 작업
-    # Postman에서 테스트하기
-    # URL: /api/posts/
-    def get(self, request, format=None):
-        # 모든 Post목록을 리턴
-        posts = Post.objects.all()
-        return Response(PostSerializer(posts, many=True).data)
-
-    def post(self, request, format=None):
-        # 새 Post를 생성
-        serializer = PostSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(author=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 
-class PostDetail(APIView):
-    # URL: /api/posts/<pk>/
-    def get_object(self, pk):
-        try:
-            return Post.objects.get(pk=pk)
-        except Post.DoesNotExist:
-            raise HTTP404
+class PostDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
 
-    def get(self, request, pk, format=None):
-        # pk에 해당하는 Post정보를 리턴
-        post = self.get_object(pk)
-        serializer = PostSerializer(post)
-        return Response(serializer.data)
-
-    def patch(self, request, pk, format=None):
-        return self.put(request, pk, format, partial=True)
-
-    def put(self, request, pk, format=None):
-        post = self.get_object(pk)
-        serializer = PostSerializer(post, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        post = self.get_object(pk)
-        post.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+    )
 
 
 class PostLikeCreateDestroy(APIView):
@@ -77,7 +46,7 @@ class PostLikeCreateDestroy(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, post_pk):
         post = get_object_or_404(Post, pk=post_pk)
@@ -94,7 +63,7 @@ class PostLikeCreateAPIView(generics.CreateAPIView):
 
 
 class PostLikeDestroyAPIView(generics.DestroyAPIView):
-    queryset = Post.objects.all()
+    queryset = PostLike.objects.all()
     serializer_class = PostLikeSerializer
     permission_classes = (
         permissions.IsAuthenticated,
@@ -106,7 +75,7 @@ def tag_search(request):
     # URL: '/posts/api/tag-search/'
 
     # request.GET으로 전달된
-    #  search_keyword값을 가지는(contains)
+    #  keyword값을 가지는(contains)
 
     #  HashTag목록을 가져와 각 항목을 dict로 변경
     #   dict요소의 list로 만들어 HttpResponse에 리턴
