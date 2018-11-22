@@ -26,12 +26,12 @@ from posts import apis as posts_apis
 from members import apis as members_apis
 
 urlpatterns_api_posts = ([
-    path('post/', apis.PostList.as_view(), name='post-list'),
-    path('post/<int:pk>/', apis.PostDetail.as_view(), name='post-detail'),
-    path('post/<int:post_pk>/like/', apis.PostLikeCreateDestroy.as_view(), name='post-like'),
+    path('post/', posts_apis.PostList.as_view(), name='post-list'),
+    path('post/<int:pk>/', posts_apis.PostDetail.as_view(), name='post-detail'),
+    path('post/<int:post_pk>/like/', posts_apis.PostLikeCreateDestroy.as_view(), name='post-like'),
 
-    path('postlike/', apis.PostLikeCreateAPIView.as_view()),
-    path('postlike/<int:pk>/', apis.PostLikeDestroyAPIView.as_view()),
+    path('postlike/', posts_apis.PostLikeCreateAPIView.as_view()),
+    path('postlike/<int:pk>/', posts_apis.PostLikeDestroyAPIView.as_view()),
 ], 'posts')
 
 urlpatterns_api_members = ([
